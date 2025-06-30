@@ -1,59 +1,32 @@
-const IMGUR_CLIENT_ID = 'YOUR_IMGUR_CLIENT_ID';
-const API_URL = 'https://your-backend-url.onrender.com/generate'; // update for production
+const backendURL = "https://ai-infuencer1.onrender.com";
 
-async function uploadImage(file) {
+document.getElementById("generate-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const imageInput = document.getElementById("image");
+  const promptInput = document.getElementById("prompt");
+
+  const imageFile = imageInput.files[0];
+  const prompt = promptInput.value;
+
   const formData = new FormData();
-  formData.append('image', file);
-
-  const response = await fetch('https://api.imgur.com/3/image', {
-    method: 'POST',
-    headers: {
-      Authorization: `Client-ID ${IMGUR_CLIENT_ID}`
-    },
-    body: formData
-  });
-
-  const data = await response.json();
-  if (data.success) {
-    return data.data.link;
-  } else {
-    throw new Error('Image upload failed');
-  }
-}
-
-async function generateImage() {
-  const imageFile = document.getElementById('imageInput').files[0];
-  const prompt = document.getElementById('promptInput').value;
-  const resultDiv = document.getElementById('result');
-  resultDiv.innerHTML = 'Processing...';
-
-  if (!imageFile || !prompt) {
-    resultDiv.innerHTML = 'Please provide an image and a prompt.';
-    return;
-  }
+  formData.append("image", imageFile);
+  formData.append("prompt", prompt);
 
   try {
-    const imageUrl = await uploadImage(imageFile);
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ image_url: imageUrl, prompt })
+    const response = await fetch(`${backendURL}/generate`, {
+      method: "POST",
+      body: formData,
     });
 
-    const data = await res.json();
-    if (data.result) {
-      const img = document.createElement('img');
-      img.src = data.result;
-      img.alt = 'Generated Image';
-      img.style.maxWidth = '100%';
-      resultDiv.innerHTML = '';
-      resultDiv.appendChild(img);
+    const result = await response.json();
+    if (result.output) {
+      document.getElementById("result-image").src = result.output;
     } else {
-      resultDiv.innerHTML = data.error || 'Generation failed.';
+      alert("Image generation failed.");
     }
   } catch (err) {
-    resultDiv.innerHTML = `Error: ${err.message}`;
+    console.error("Error:", err);
+    alert("Something went wrong.");
   }
-}
+});

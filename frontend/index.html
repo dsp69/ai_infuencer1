@@ -1,20 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Influencer Image Generator</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>AI Influencer Image Generator</h1>
-    <input type="file" id="imageInput" accept="image/*" />
-    <input type="text" id="promptInput" placeholder="Describe the influencer style..." />
-    <button onclick="generateImage()">Generate</button>
-    <div id="result"></div>
-  </div>
+<form id="generate-form">
+  <input type="file" id="image" accept="image/*" required />
+  <input type="text" id="prompt" placeholder="Enter prompt" required />
+  <button type="submit">Generate</button>
+</form>
 
-  <script src="script.js"></script>
-</body>
-</html>
+<img id="result-image" src="" alt="Generated image will appear here" />
+
+    const result = await response.json();
+    if (result.output) {
+      document.getElementById("result-image").src = result.output;
+    } else {
+      alert("Image generation failed.");
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Something went wrong.");
+  }
+});
+
