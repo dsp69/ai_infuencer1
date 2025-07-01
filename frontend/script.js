@@ -3,15 +3,14 @@ const backendURL = "https://ai-infuencer1.onrender.com";
 document.getElementById("generate-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const imageInput = document.getElementById("image");
-  const promptInput = document.getElementById("prompt");
-
-  const imageFile = imageInput.files[0];
-  const prompt = promptInput.value;
+  const imageFile = document.getElementById("image").files[0];
+  const prompt = document.getElementById("prompt").value;
 
   const formData = new FormData();
   formData.append("image", imageFile);
   formData.append("prompt", prompt);
+
+  document.getElementById("status").innerText = "⏳ Generating image...";
 
   try {
     const response = await fetch(`${backendURL}/generate`, {
@@ -20,13 +19,15 @@ document.getElementById("generate-form").addEventListener("submit", async (e) =>
     });
 
     const result = await response.json();
+
     if (result.output) {
       document.getElementById("result-image").src = result.output;
+      document.getElementById("status").innerText = "✅ Image generated!";
     } else {
-      alert("Image generation failed.");
+      document.getElementById("status").innerText = "❌ Image generation failed.";
     }
   } catch (err) {
     console.error("Error:", err);
-    alert("Something went wrong.");
+    document.getElementById("status").innerText = "❌ Something went wrong.";
   }
 });

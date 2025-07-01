@@ -1,20 +1,26 @@
 <form id="generate-form">
-  <input type="file" id="image" accept="image/*" required />
-  <input type="text" id="prompt" placeholder="Enter prompt" required />
-  <button type="submit">Generate</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Influencer Generator</title>
+</head>
+<body>
 
-<img id="result-image" src="" alt="Generated image will appear here" />
+  <h1>AI Influencer Image Generator</h1>
 
-    const result = await response.json();
-    if (result.output) {
-      document.getElementById("result-image").src = result.output;
-    } else {
-      alert("Image generation failed.");
-    }
-  } catch (err) {
-    console.error("Error:", err);
-    alert("Something went wrong.");
-  }
-});
+  <form id="generate-form">
+    <input type="file" id="image" accept="image/*" required />
+    <input type="text" id="prompt" placeholder="Enter prompt" required />
+    <button type="submit">Generate</button>
+  </form>
 
+  <p id="status"></p>
+
+  <img id="result-image" src="" alt="Generated image will appear here" style="max-width: 100%; margin-top: 20px;" />
+
+  <script src="script.js"></script>
+
+</body>
+</html>
