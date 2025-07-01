@@ -15,27 +15,29 @@ os.environ["WERKZEUG_DEBUG_PIN"] = "off"
 @app.route("/generate", methods=["POST"])
 def generate():
     try:
-        image_url = request.json.get("image_url")
-        prompt = request.json.get("prompt")
+        if "image" not in request.files or "prompt" not in request.form:
+            return jsonify({"error": "Missing image or prompt"}), 400
 
-        if not image_url or not prompt:
-            return jsonify({"error": "Missing image_url or prompt"}), 400
+        image_file = request.files["image"]
+        prompt = request.form["prompt"]
 
+        # Convert image to base64 data URL
+        import base64
+        image_bytes = image_file.read()
+        base64_str = base64.b64encode(image_bytes).decode("utf-8")
+        image_data_url = f"data:image/jpeg;base64,{base64_str}"
+
+        # Call Replicate with data URL
         output = replicate.run(
             "stability-ai/sdxl:latest",
             input={
-                "image": image_url,
+                "image": image_data_url,
                 "prompt": prompt
             }
         )
-        return jsonify({"result": output})
+
+        return jsonify({"output": output})
 
     except Exception as e:
         logging.exception("Error generating image")
         return jsonify({"error": str(e)}), 500
-
-# Note: Do not run the server directly in restricted/sandboxed environments.
-# This file should be served using a WSGI server like gunicorn or through a host-controlled entry point.
-
-# Optional: WSGI entry point
-application = app
