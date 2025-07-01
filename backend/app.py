@@ -47,3 +47,4 @@ def generate():
     except Exception as e:
         logging.exception("Error generating image")
         return jsonify({"error": str(e)}), 500
+application = app
