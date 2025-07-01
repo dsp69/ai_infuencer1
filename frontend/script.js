@@ -18,13 +18,13 @@ document.getElementById("generate-form").addEventListener("submit", async (e) =>
       body: formData,
     });
 
-    const result = await response.json();
+    const data = await response.json();
 
-    if (result.output) {
-      document.getElementById("result-image").src = result.output;
+    if (data.output) {
+      document.getElementById("result-image").src = data.output;
       document.getElementById("status").innerText = "✅ Image generated!";
     } else {
-      document.getElementById("status").innerText = "❌ Image generation failed.";
+      document.getElementById("status").innerText = "❌ Failed: " + (data.error || "unknown");
     }
   } catch (err) {
     console.error("Error:", err);
